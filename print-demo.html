@@ -1,0 +1,69 @@
+<!doctype html>
+<html ng-app="demo">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <title>Angualr Chrome PDF Print Demo</title>
+
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+        <script src="angular-chrome-pdf-print/angular-chrome-pdf-print.directive.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid" ng-controller="DemoController as vm">
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="page-header">
+                        <h3>Angualr Chrome PDF Print Demo</h3>
+                    </div>
+                </div>
+            </div> <!-- .row -->
+
+           
+            <div class="row">
+                <div class="col-xs-12">
+                    <button class="btn btn-primary" type="button"
+                            angular-chrome-pdf-print
+                            busy="vm.busy"
+                            urls="vm.pdfUrls">
+                        <span class="fa fa-lg" ng-class="{'fa-print': !vm.loading, 'fa-spinner fa-spin': vm.loading}"></span> Stampa
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+
+
+        <script type="text/javascript">
+            (function() {
+                'use strict';
+
+                angular
+                    .module("demo", ['angular-chrome-pdf-print'])
+                    .controller('DemoController', DemoController);
+
+                function DemoController($scope) {
+                    var vm = this;
+                    vm.loading = false;
+
+                    vm.pdfUrls = [
+                        '../api/demo/download?filename=file.pdf&mime=application/pdf&attachment=false',
+                        '../api/demo/download?filename=file.pdf&mime=application/pdf&attachment=false'
+                    ];
+
+                    $scope.$watch('vm.busy', function (newVal) {
+                        if (!!newVal && newVal.$$state && newVal.$$state.status === 0) {
+                            vm.loading = true;
+                            newVal.then(function () {
+                                vm.loading = false;
+                            });
+                        }
+                    });
+                } // DemoController
+            }());            
+        </script>
+    </body>
+</html>
